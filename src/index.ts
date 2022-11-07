@@ -1,11 +1,33 @@
-import express from 'express'
-import loaders from './loaders/index'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import express, { json } from 'express'
 
-// eslint-disable-next-line require-jsdoc
+import connectDB from './config/database'
+import loaders from './loaders'
+
 function app() {
-    const port = 3000
     const app = express()
+
+    // Connect to MongoDB
+    connectDB()
+
+    // Express configuration
+    app.set('port', process.env.PORT || 5000)
+    app.use(json())
+    app.use(bodyParser.json({ limit: '50mb' }))
+    app.use(
+        bodyParser.urlencoded({
+            limit: '50mb',
+            extended: true,
+            parameterLimit: 1000000,
+        })
+    )
+    app.use(cors())
     loaders(app)
-    app.listen(port, () => console.log(`Server is listening on port ${port}!`))
+
+    const port = app.get('port')
+    const server = app.listen(port, () =>
+        console.log(`Server started on port ${port}`)
+    )
 }
 app()
