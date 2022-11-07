@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 import Payload from '../../types/Payload'
 import config from '../../config/config'
 import jwt from 'jsonwebtoken'
+import { stat } from 'fs'
 async function createUser(email: string, password: string) {
     try {
         let user: IUser = await User.findOne({ email })
@@ -138,10 +139,31 @@ async function updateAvatar(userId: string, avatar: any) {
     }
 }
 
+async function getUserByAccessToken(accessToken: string){
+    try{
+        const [, token] = accessToken.split(' ')
+        console.log(token)
+        const payload = jwt.verify(token, config.jwtSecret) as Payload
+        const user = await User.findById(payload.userId)
+        return {
+            status: HttpStatusCodes.OK,
+            message: user
+        }
+    }
+    catch(err: any){
+        console.error(err.message)
+        return {
+            status: HttpStatusCodes.INTERNAL_SERVER_ERROR,
+            message: 'Server error',
+        }
+    }
+}
+
 export default {
     createUser,
     getUserById,
     getAllUsers,
     deleteUser,
     updateAvatar,
+    getUserByAccessToken,
 }

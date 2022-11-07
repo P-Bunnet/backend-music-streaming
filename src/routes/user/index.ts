@@ -19,9 +19,12 @@ router.post(
     ],
     userController.createUser
 )
+router.get('/profile/', userController.getUserByAccessToken)
 router.get('/:id', userController.getUserById)
 router.delete('/:id', auth, userController.deleteUser)
 router.put('/avatar/:id', auth, userController.updateAvatar)
 router.get('/', userController.getAllUsers)
+
+
 
 export default router

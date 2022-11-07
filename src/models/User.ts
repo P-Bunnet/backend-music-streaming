@@ -43,6 +43,22 @@ const userSchema: Schema = new Schema({
         type: Date,
         default: Date.now,
     },
+    role: {
+        type: String,
+        default: 'user',
+    },
+    gender: {
+        type: String,
+        default: 'unknown'
+    },
+    birthdate: {
+        type: Date,
+        default: null
+    },
+    country: {
+        type: String,
+        default: 'unknown'
+    },
 })
 
 /**

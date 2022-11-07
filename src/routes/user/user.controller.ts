@@ -74,10 +74,24 @@ async function getAllUsers(req: Request, res: Response) {
     }
 }
 
+async function getUserByAccessToken(req: Request, res: Response){
+    try{
+        const user = await userServices.getUserByAccessToken(req.headers.authorization)
+        return res.status(user.status).json({ msg: user.message })
+    }
+    catch(err: any){
+        console.log(err.message)
+        return res 
+            .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+            .send('Server error')
+    }
+}
+
 export default {
     createUser,
     getUserById,
     deleteUser,
     updateAvatar,
     getAllUsers,
+    getUserByAccessToken
 }
